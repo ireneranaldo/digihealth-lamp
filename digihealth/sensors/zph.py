@@ -1,6 +1,7 @@
 import serial
 from typing import Dict, Any, Optional
 from .base import BaseSensor
+import time
 
 class ZPHSensor(BaseSensor):
     """ZPH01B Air Quality Sensor via Serial."""

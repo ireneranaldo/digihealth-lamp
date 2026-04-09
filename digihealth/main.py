@@ -50,14 +50,26 @@ def main():
     # Sensor collection thread
     def sensor_loop():
         while True:
+            # 1. Raccolta dati grezzi dai sensori
             data = sensor_manager.collect_all()
+            
+            # 2. Elaborazione (calcolo IAQI, medie, ecc.)
             processed_data = processor_manager.process(data)
+            
+            # 3. Invio a Telegraf/InfluxDB
             communicator_manager.send(processed_data)
 
+            # --- AGGIUNTA PER LA DASHBOARD WEB ---
+            if web_manager:
+                # Questo metodo deve essere implementato in digihealth/web/__init__.py
+                web_manager.update_data(processed_data)
+            # -------------------------------------
+
+            # 4. Controllo LED (se presenti)
             if actuator_manager:
                 actuator_manager.update(processed_data)
 
-            time.sleep(30)  # Collect every 30 seconds
+            time.sleep(30)  # Ciclo ogni 30 secondi
 
     threads.append(threading.Thread(target=sensor_loop, daemon=True))
 
