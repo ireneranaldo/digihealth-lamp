@@ -36,7 +36,6 @@ state = {
 
 @app.route('/')
 def index():
-    # Flask cercherà automaticamente in templates/dashboard.html
     return render_template('dashboard.html')
 
 @app.route('/status')
@@ -50,7 +49,23 @@ def toggle():
     logger.info(f"Switch Web: {'ON' if state['active'] else 'OFF'}")
     return jsonify({"status": "ok", "active": state["active"]})
 
-# ... mantieni gli altri endpoint (/calibrate, /set_volume) come prima ...
+@app.route('/calibrate')
+def calibrate():
+    state["mode"] = "CALIBRATION"
+    logger.info("Richiesta calibrazione da interfaccia Web")
+    return jsonify({"status": "ok"})
+
+@app.route('/set_volume')
+def set_volume():
+    # Prende il valore 'level' dall'URL (es: /set_volume?level=50)
+    vol = request.args.get('level', type=int)
+    if vol is not None:
+        state["volume"] = vol
+        logger.info(f"Volume impostato via Web a: {vol}")
+        return jsonify({"status": "ok", "volume": vol})
+    return jsonify({"status": "error", "message": "Valore mancante"}), 400
+
+
 
 class WebManager:
     def __init__(self):
@@ -58,14 +73,24 @@ class WebManager:
         self.port = config.web.port
 
     def update_data(self, processed_data):
-        """Riceve i dati dal main.py e aggiorna il dizionario 'state'"""
-        try:
-            state["level"] = processed_data.get('audio_level', 0)
-            state["air_quality"]["iaqi"] = processed_data.get('IAQI', '--')
-            state["air_quality"]["temp"] = processed_data.get('temperature', '--')
-            # Eccetera...
-        except Exception as e:
-            logger.error(f"Errore update web: {e}")
+            try:
+                # Livello audio principale
+                state["level"] = processed_data.get('audio_level', 0)
+                
+                # Estraiamo i dati usando i nomi esatti che arrivano dal sensore
+                state["air_quality"] = {
+                    "temp": round(processed_data.get('TEMP-[C]', '--'),1),
+                    "humidity": processed_data.get('HUM-[%]', '--'),
+                    "co2": processed_data.get('CO2-AnidrideCarbonica-[ppm]', '--'),
+                    "iaqi": processed_data.get('IAQI', 200)
+                }
+                
+                # Aggiorna lo spettro (se hai i dati, altrimenti lascialo vuoto o simulato)
+                if 'spectrum' in processed_data:
+                    state["spectrum"] = processed_data['spectrum']
+                    
+            except Exception as e:
+                logger.error(f"Errore nell'aggiornamento dei dati web: {e}")
 
     def run(self):
         app.run(host=self.host, port=self.port, debug=False, use_reloader=False)
