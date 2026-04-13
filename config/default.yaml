@@ -43,7 +43,7 @@ actuators:
 communicator:
   telegraf:
     enabled: true
-    measurement: "ZPHSensor"
+    measurement: "ZPHSensor_sensore"
     tags:
       sensor: "ZPHS01B"
       host: "raspberry01"
