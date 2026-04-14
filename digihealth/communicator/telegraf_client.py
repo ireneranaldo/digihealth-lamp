@@ -53,9 +53,15 @@ class TelegrafClient:
             }
 
             # Aggiungiamo solo i campi che non sono None
+            field_count = 0
             for key, val in fields.items():
                 if val is not None:
                     point.field(key, float(val))
+                    field_count += 1
+
+            if field_count == 0:
+                logger.warning(f"No valid fields to send to InfluxDB. Data received: {data}")
+                return
 
             # Aggiungiamo i tag configurati
             for tag_name, tag_value in self.tags.items():
@@ -64,6 +70,7 @@ class TelegrafClient:
 
             # Invio fisico del dato
             self.write_api.write(bucket=self.bucket, org=self.org, record=point)
+            logger.debug(f"Sent {field_count} fields to InfluxDB: {list(fields.keys())}")
             
         except Exception as e:
             logger.error(f"Errore durante l'invio a InfluxDB: {e}")

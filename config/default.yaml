@@ -87,5 +87,5 @@ web:
   port: 5000
 
 logging:
-  level: "INFO"
+  level: "DEBUG"  # Set to DEBUG for detailed diagnostics
   file: "~/digihealth-lamp.log"
