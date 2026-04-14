@@ -46,7 +46,10 @@ class TelegrafClient:
                 "NO2-BiossidoDiAzoto-[ppm]": data.get("NO2-BiossidoDiAzoto-[ppm]"),
                 "lux-IntensitaLuminosa": data.get("lux-IntensitaLuminosa"),
                 "IAQI": data.get("IAQI"),
-                "person_count": data.get("person_count")
+                "people_count": data.get("people_count"),
+                "window_open": data.get("window_open"),
+                "door_open": data.get("door_open"),
+                "door_count": data.get("door_count")
             }
 
             # Aggiungiamo solo i campi che non sono None
