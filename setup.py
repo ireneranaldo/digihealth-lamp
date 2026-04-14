@@ -13,6 +13,7 @@ setup(
     entry_points={
         "console_scripts": [
             "digihealth-lamp=digihealth.main:main",
+            "digihealth-setup=setup_config:create_local_config",
         ],
     },
     include_package_data=True,

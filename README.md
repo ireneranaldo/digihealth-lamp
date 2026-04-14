@@ -51,8 +51,11 @@ Una lampada smart basata su Raspberry Pi per il monitoraggio ambientale e l'invi
    sudo pip3 install -e .
    ```
 
-5. **Configura** (opzionale):
-   Modifica `config/default.yaml` per adattare alle tue impostazioni.
+5. **Configura l'installazione**:
+   ```bash
+   digihealth-setup
+   ```
+   Questo comando crea `config/local.yaml` con le impostazioni specifiche per la tua installazione (tag InfluxDB, sensori opzionali, ecc.).
 
 6. **Installa il servizio systemd**:
    ```bash
@@ -80,56 +83,80 @@ Apri http://raspberry-pi-ip:5000 nel browser.
 
 ## Configurazione
 
-Modifica `config/default.yaml` per:
-- Abilitare/disabilitare moduli
-- Configurare indirizzi IP, pin GPIO
-- Abilitare sensori opzionali come porta, finestra, conteggio persone
-- Impostare tag InfluxDB come `sensor`, `host`, `lampada`, `stanza`
-- Impostare soglie e parametri
+Il sistema supporta **configurazioni gerarchiche** per adattarsi a installazioni diverse:
 
-Esempio di configurazione opzionale:
+### 📁 File di configurazione
+
+1. **`config/default.yaml`** - Configurazione di base (non modificare)
+2. **`config/local.yaml`** - Configurazione specifica dell'installazione (creato automaticamente)
+
+### 🏷️ Configurazione tag InfluxDB
+
+I tag InfluxDB possono essere configurati in diversi modi (priorità decrescente):
+
+1. **Variabili d'ambiente** (più sicure per deployment automatizzati):
+   ```bash
+   export DIGIHEALTH_SENSOR="ZPHS01B"
+   export DIGIHEALTH_HOST="raspberry01"
+   export DIGIHEALTH_LAMPADA="88a29e6f9779"
+   export DIGIHEALTH_STANZA="Ufficio1_ProtoDesign"
+   export DIGIHEALTH_CLIENT_ID="57"
+   ```
+
+2. **Script di setup interattivo**:
+   ```bash
+   digihealth-setup
+   ```
+
+3. **File `config/local.yaml`** (modifica manuale):
+   ```yaml
+   communicator:
+     telegraf:
+       tags:
+         sensor: "ZPHS01B"
+         host: "raspberry01"
+         lampada: "88a29e6f9779"
+         stanza: "Ufficio1_ProtoDesign"
+         client_id: "57"
+   ```
+
+### 🔧 Configurazione sensori/attuatori opzionali
+
+Usa `digihealth-setup` per abilitare:
+- **Conteggio persone**: telecamera RTSP con YOLOv8
+- **Faretti LED WiFi**: luce circardiana basata su lux
+- **Sensori porta/finestra**: GPIO contact sensors
+
+Esempio configurazione completa in `config/local.yaml`:
 ```yaml
 sensors:
-  door:
-    enabled: false
-    gpio_pin: 18
-    pull_up_down: up
-  window:
-    enabled: false
-    gpio_pin: 17
-    pull_up_down: up
   people_counter:
-    enabled: false
+    enabled: true
     rtsp_url: "rtsp://admin:password@192.168.1.124/profile2/media.smp"
-    model_path: "yolov8n.pt"
-    frame_width: 640
-    frame_height: 480
 
 actuators:
-  shelly:
-    enabled: false
-    ip: "192.168.1.191"
-    mode: "presence"
-    person_threshold: 1
   led_wifi:
-    enabled: false
+    enabled: true
     ip: "192.168.1.192"
     mode: "circadian"
-    min_lux: 10
-    max_lux: 500
 
 communicator:
   telegraf:
-    enabled: true
-    measurement: "ZPHSensor_sensore"
     tags:
       sensor: "ZPHS01B"
       host: "raspberry01"
-      lampada: "AS00000046"
-      stanza: "UfficioDigiplus"
+      lampada: "88a29e6f9779"
+      stanza: "Ufficio1_ProtoDesign"
+      client_id: "57"
 ```
 
-Se un sensore opzionale non è presente o è disabilitato, il sistema continua a inviare gli altri dati disponibili.
+### 🔄 Ordine di caricamento configurazione
+
+1. Carica `config/default.yaml`
+2. Sovrascrive con `config/local.yaml` (se esiste)
+3. Sovrascrive con variabili d'ambiente (se definite)
+
+Questo permette di avere valori di default sicuri nel repository mentre ogni installazione può personalizzare i propri tag e impostazioni.
 
 ## Sviluppo
 
@@ -146,11 +173,13 @@ digihealth_lamp/
 │   ├── communicator/        # Modulo comunicazione
 │   └── web/                 # Modulo web (opzionale)
 ├── config/
-│   └── default.yaml         # Configurazione di default
+│   ├── default.yaml         # Configurazione di default
+│   └── local.yaml           # Configurazione locale (creato da setup)
 ├── systemd/
 │   └── digihealth-lamp.service
 ├── docker/
 │   └── Dockerfile
+├── setup_config.py          # Script di configurazione interattiva
 ├── requirements.txt
 ├── setup.py
 └── README.md

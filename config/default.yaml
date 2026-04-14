@@ -72,8 +72,9 @@ communicator:
     tags:
       sensor: "ZPHS01B"
       host: "raspberry01"
-      lampada: "AS00000046"
-      stanza: "UfficioDigiplus"
+      lampada: "88a29e6f9779"
+      stanza: "Ufficio1_ProtoDesign"
+      client_id: "57"
   ipc:
     method: "sqlite"  # or "redis"
     db_path: "/tmp/digihealth.db"

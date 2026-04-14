@@ -49,12 +49,27 @@ sudo journalctl -u digihealth-lamp.service -f
 (Premi CTRL+C per uscire dalla visualizzazione dei log)
 
 -----------------------------------------------------
-4. CONFIGURAZIONE OPZIONALE
+4. CONFIGURAZIONE INSTALLAZIONE SPECIFICA
 -----------------------------------------------------
 Il file di configurazione principale è:
 /home/digip/digihealth-lamp/config/default.yaml
 
-Opzioni importanti:
+Per configurare i tag InfluxDB specifici della tua installazione:
+
+OPZIONE 1 - Script interattivo (raccomandato):
+sudo digihealth-setup
+
+OPZIONE 2 - Variabili d'ambiente:
+export DIGIHEALTH_SENSOR="ZPHS01B"
+export DIGIHEALTH_HOST="raspberry01"
+export DIGIHEALTH_LAMPADA="88a29e6f9779"
+export DIGIHEALTH_STANZA="Ufficio1_ProtoDesign"
+export DIGIHEALTH_CLIENT_ID="57"
+
+OPZIONE 3 - File locale:
+nano /home/digip/digihealth-lamp/config/local.yaml
+
+Opzioni importanti per sensori/attuatori:
 - `sensors.door.enabled`: abilita/disabilita il sensore porta
 - `sensors.window.enabled`: abilita/disabilita il sensore finestra
 - `sensors.people_counter.enabled`: abilita/disabilita il conteggio persone via telecamera
@@ -73,7 +88,7 @@ Ambiente Virtuale: /home/digip/digihealth-lamp/venv/
 =====================================================
 
 -----------------------------------------------------
-5. ESECUZIONE MANUALE PER TEST (DEBUG)
+6. ESECUZIONE MANUALE PER TEST (DEBUG)
 -----------------------------------------------------
 Se vuoi vedere l'output direttamente nel terminale 
 senza usare il servizio systemd:
