@@ -6,7 +6,8 @@ After=network.target
 Type=simple
 User=pi
 WorkingDirectory=/home/pi/digihealth-lamp
-ExecStart=/usr/bin/python3 -m digihealth.main
+Environment="PATH=/home/pi/digihealth-lamp/venv/bin:/usr/local/bin:/usr/bin:/bin"
+ExecStart=/home/pi/digihealth-lamp/venv/bin/python3 -m digihealth.main
 Restart=always
 RestartSec=5
 StandardOutput=journal

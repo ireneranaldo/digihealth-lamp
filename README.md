@@ -29,37 +29,44 @@ Una lampada smart basata su Raspberry Pi per il monitoraggio ambientale e l'invi
 
 1. **Clona il repository**:
    ```bash
-   git clone https://github.com/yourusername/digihealth-lamp.git
+   git clone https://github.com/ireneranaldo/digihealth-lamp.git
    cd digihealth-lamp
    ```
 
 2. **Installa le dipendenze di sistema**:
    ```bash
    sudo apt update
-   sudo apt install python3-pip python3-dev
+   sudo apt install python3-pip python3-dev python3-venv
    ```
 
-3. **Abilita interfacce hardware**:
+3. **Crea un ambiente Python (venv)** - **IMPORTANTE**:
+   ```bash
+   python3 -m venv venv
+   source venv/bin/activate
+   ```
+   Il prompt dovrebbe ora mostrare `(venv)` all'inizio.
+
+4. **Abilita interfacce hardware**:
    ```bash
    sudo raspi-config
    # Interfacing Options > I2C > Enable
    # Interfacing Options > Serial > Enable, disable console
    ```
 
-4. **Installa il package**:
+5. **Installa il package** - **senza sudo** (sei nel venv!):
    ```bash
-   sudo pip3 install -e .
+   pip install -e .
    ```
 
-   > Se usi pip 24.1+ e vedi errori su `telegraf-pyplug`, il pacchetto è stato rimosso dalle dipendenze perché non viene usato dal progetto.
+   > Se vedi `error: externally-managed-environment`, assicurati che il venv sia attivato (il prompt mostra `(venv)`) e NON usare `sudo`.
 
-5. **Configura l'installazione**:
+6. **Configura l'installazione**:
    ```bash
    digihealth-setup
    ```
    Questo comando crea `config/local.yaml` con le impostazioni specifiche per la tua installazione (tag InfluxDB, sensori opzionali, ecc.).
 
-6. **Installa il servizio systemd**:
+7. **Installa il servizio systemd**:
    ```bash
    sudo cp systemd/digihealth-lamp.service /etc/systemd/system/
    sudo systemctl daemon-reload
@@ -67,7 +74,7 @@ Una lampada smart basata su Raspberry Pi per il monitoraggio ambientale e l'invi
    sudo systemctl start digihealth-lamp
    ```
 
-7. **Verifica**:
+8. **Verifica**:
    ```bash
    sudo systemctl status digihealth-lamp
    sudo journalctl -u digihealth-lamp -f
@@ -77,6 +84,10 @@ Una lampada smart basata su Raspberry Pi per il monitoraggio ambientale e l'invi
 
 ### Avvio Manuale
 ```bash
+# Se non sei nel venv, attivalo prima:
+source venv/bin/activate
+
+# Poi avvia l'applicazione:
 digihealth-lamp
 ```
 
