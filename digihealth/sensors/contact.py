@@ -17,6 +17,8 @@ class GPIOContactSensor(BaseSensor):
         self.pin = config.get('gpio_pin')
         self.pull_up_down = config.get('pull_up_down', 'up').lower()
         self._gpio_ready = False
+        self.count = 0
+        self.last_state = None
 
     def is_available(self) -> bool:
         if GPIO is None:
@@ -44,7 +46,18 @@ class GPIOContactSensor(BaseSensor):
         try:
             value = GPIO.input(self.pin)
             is_open = value == 0 if self.pull_up_down == 'up' else value == 1
-            return {f"{self.name}_open": int(is_open)}
+            
+            # Track count for door sensor (increment on open)
+            if self.name == 'door' and self.last_state is not None and not self.last_state and is_open:
+                self.count += 1
+            
+            self.last_state = is_open
+            
+            result = {f"{self.name}_open": int(is_open)}
+            if self.name == 'door':
+                result[f"{self.name}_count"] = self.count
+            
+            return result
         except Exception as e:
             self.logger.error(f"Error reading {self.name} sensor: {e}")
             return {}
