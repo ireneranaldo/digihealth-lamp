@@ -1,0 +1,22 @@
+# Esempio di configurazione locale per un Raspberry con telecamera YOLO
+# e senza microfono / casse.
+
+sensors:
+  people_counter:
+    enabled: true
+    rtsp_url: "rtsp://admin:password@192.168.1.124/profile2/media.smp"
+  microphone:
+    enabled: false
+
+processors:
+  audio_comfort:
+    enabled: false
+
+communicator:
+  telegraf:
+    tags:
+      sensor: "ZPHS01B"
+      host: "raspberry01"
+      lampada: "88a29e6f9779"
+      stanza: "Ufficio1_ProtoDesign"
+      client_id: "57"

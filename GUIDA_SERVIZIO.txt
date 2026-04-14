@@ -75,6 +75,12 @@ Opzioni importanti per sensori/attuatori:
 - `sensors.people_counter.enabled`: abilita/disabilita il conteggio persone via telecamera
 - `actuators.shelly.enabled`: abilita/disabilita il controllo Shelly
 - `actuators.led_wifi.enabled`: abilita/disabilita i faretti LED WiFi circadiani
+- `sensors.microphone.enabled`: abilita/disabilita il microfono
+- `processors.audio_comfort.enabled`: abilita/disabilita l'elaborazione comfort acustico
+
+Se la Raspberry non ha microfono o casse, impostare esplicitamente:
+- `sensors.microphone.enabled: false`
+- `processors.audio_comfort.enabled: false`
 
 Questi sensori e attuatori sono disabilitati di default nella versione ufficiale della lampada.
 Se sono disabilitati, il servizio continuerà comunque a inviare gli altri dati ambientali.

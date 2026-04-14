@@ -132,6 +132,17 @@ def create_local_config():
             'max_lux': 500
         }
 
+    # Microfono / audio
+    has_microphone = input("Hai un microfono sul Raspberry? (y/N): ").lower().startswith('y')
+    local_config_data['sensors'] = local_config_data.get('sensors', {})
+    local_config_data['processors'] = local_config_data.get('processors', {})
+    local_config_data['sensors']['microphone'] = {
+        'enabled': bool(has_microphone)
+    }
+    local_config_data['processors']['audio_comfort'] = {
+        'enabled': bool(has_microphone)
+    }
+
     # Save local config
     with open(local_config, 'w') as f:
         yaml.dump(local_config_data, f, default_flow_style=False, sort_keys=False)

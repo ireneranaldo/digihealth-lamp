@@ -127,12 +127,29 @@ Usa `digihealth-setup` per abilitare:
 - **Faretti LED WiFi**: luce circardiana basata su lux
 - **Sensori porta/finestra**: GPIO contact sensors
 
+Se sul Raspberry non ci sono microfono e casse, aggiungi esplicitamente queste opzioni in `config/local.yaml`:
+```yaml
+sensors:
+  microphone:
+    enabled: false
+
+processors:
+  audio_comfort:
+    enabled: false
+```
+
 Esempio configurazione completa in `config/local.yaml`:
 ```yaml
 sensors:
   people_counter:
     enabled: true
     rtsp_url: "rtsp://admin:password@192.168.1.124/profile2/media.smp"
+  microphone:
+    enabled: false
+
+processors:
+  audio_comfort:
+    enabled: false
 
 actuators:
   led_wifi:
