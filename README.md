@@ -51,6 +51,8 @@ Una lampada smart basata su Raspberry Pi per il monitoraggio ambientale e l'invi
    sudo pip3 install -e .
    ```
 
+   > Se usi pip 24.1+ e vedi errori su `telegraf-pyplug`, il pacchetto è stato rimosso dalle dipendenze perché non viene usato dal progetto.
+
 5. **Configura l'installazione**:
    ```bash
    digihealth-setup

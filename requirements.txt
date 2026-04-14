@@ -8,7 +8,7 @@ adafruit-blinka
 smbus2
 pyserial
 requests
-telegraf-pyplug
+influxdb-client
 pydantic
 pyyaml
 pytest
