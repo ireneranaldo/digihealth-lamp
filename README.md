@@ -5,8 +5,9 @@ Una lampada smart basata su Raspberry Pi per il monitoraggio ambientale e l'invi
 ## Caratteristiche
 
 - **Sensori Ambientali**: ZPH01B (PM2.5, CO2, TVOC, temperatura, umidità), BH1750 (luminosità)
+- **Sensori opzionali**: porta, finestra, conteggio persone via telecamera RTSP (disabilitati di default)
 - **Calcolo IAQI**: Indice di Qualità dell'Aria Interna
-- **Attuatori**: NeoPixel LED RGB, Shelly Smart Lamp
+- **Attuatori**: NeoPixel LED RGB, Shelly Smart Lamp, Faretti LED WiFi dimmerabili (circadiani)
 - **Dashboard Web**: Monitoraggio in tempo reale (opzionale)
 - **Comunicazione**: InfluxDB via Telegraf
 - **Modulare**: Estensioni opzionali caricabili dinamicamente
@@ -82,7 +83,53 @@ Apri http://raspberry-pi-ip:5000 nel browser.
 Modifica `config/default.yaml` per:
 - Abilitare/disabilitare moduli
 - Configurare indirizzi IP, pin GPIO
+- Abilitare sensori opzionali come porta, finestra, conteggio persone
+- Impostare tag InfluxDB come `sensor`, `host`, `lampada`, `stanza`
 - Impostare soglie e parametri
+
+Esempio di configurazione opzionale:
+```yaml
+sensors:
+  door:
+    enabled: false
+    gpio_pin: 18
+    pull_up_down: up
+  window:
+    enabled: false
+    gpio_pin: 17
+    pull_up_down: up
+  people_counter:
+    enabled: false
+    rtsp_url: "rtsp://admin:password@192.168.1.124/profile2/media.smp"
+    model_path: "yolov8n.pt"
+    frame_width: 640
+    frame_height: 480
+
+actuators:
+  shelly:
+    enabled: false
+    ip: "192.168.1.191"
+    mode: "presence"
+    person_threshold: 1
+  led_wifi:
+    enabled: false
+    ip: "192.168.1.192"
+    mode: "circadian"
+    min_lux: 10
+    max_lux: 500
+
+communicator:
+  telegraf:
+    enabled: true
+    measurement: "ZPHSensor_sensore"
+    tags:
+      sensor: "ZPHS01B"
+      host: "raspberry01"
+      lampada: "AS00000046"
+      stanza: "UfficioDigiplus"
+```
+
+Se un sensore opzionale non è presente o è disabilitato, il sistema continua a inviare gli altri dati disponibili.
 
 ## Sviluppo
 

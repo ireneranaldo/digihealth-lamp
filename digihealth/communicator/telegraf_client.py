@@ -9,11 +9,13 @@ class TelegrafClient:
 
     def __init__(self):
         # Configurazioni estratte dal tuo telegraf.conf
-        self.url = "https://influxdb1.digisense.it"
-        self.token = "qgkGXvOlp_Gj0veF-ewe8FSJGGCxQQoh0EfMg-Po9Bd8Vzw2iz8Y6d-Z2DE0hqojiGgIsMWJrsbqFjV6-Mi4Zw=="
-        self.org = "Digiplus"
-        self.bucket = "health_data"
-        
+        self.url = config.communicator.telegraf.get('url', 'https://influxdb1.digisense.it')
+        self.token = config.communicator.telegraf.get('token', '')
+        self.org = config.communicator.telegraf.get('org', '')
+        self.bucket = config.communicator.telegraf.get('bucket', '')
+        self.measurement = config.communicator.telegraf.get('measurement', 'ZPHSensor_sensore')
+        self.tags = config.communicator.telegraf.get('tags', {}) or {}
+
         # Inizializzazione Client
         self.client = influxdb_client.InfluxDBClient(
             url=self.url,
@@ -26,8 +28,7 @@ class TelegrafClient:
         """Invia i dati mantenendo i nomi originali delle variabili."""
         try:
             # Creazione del punto per InfluxDB
-            # Usiamo 'ZPHSensor' come nel vecchio file
-            point = influxdb_client.Point("ZPHSensor_sensore")
+            point = influxdb_client.Point(self.measurement)
             
             # Mappiamo i campi esattamente come faceva il vecchio parse_sensor_data
             # Questi nomi sono quelli che Telegraf riceveva e mandava al database
@@ -44,7 +45,8 @@ class TelegrafClient:
                 "O3-Ozono-[ppm]": data.get("O3-Ozono-[ppm]"),
                 "NO2-BiossidoDiAzoto-[ppm]": data.get("NO2-BiossidoDiAzoto-[ppm]"),
                 "lux-IntensitaLuminosa": data.get("lux-IntensitaLuminosa"),
-                "IAQI": data.get("IAQI")
+                "IAQI": data.get("IAQI"),
+                "person_count": data.get("person_count")
             }
 
             # Aggiungiamo solo i campi che non sono None
@@ -52,11 +54,10 @@ class TelegrafClient:
                 if val is not None:
                     point.field(key, float(val))
 
-            # Aggiungiamo i TAGS originali per non rompere le dashboard esistenti
-            point.tag("sensor", "ZPHS01B")
-            point.tag("host", "raspberry01")
-            point.tag("lampada", "AS00000046")
-            point.tag("stanza", "UfficioDigiplus")
+            # Aggiungiamo i tag configurati
+            for tag_name, tag_value in self.tags.items():
+                if tag_value is not None:
+                    point.tag(tag_name, str(tag_value))
 
             # Invio fisico del dato
             self.write_api.write(bucket=self.bucket, org=self.org, record=point)

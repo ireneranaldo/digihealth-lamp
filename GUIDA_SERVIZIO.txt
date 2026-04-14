@@ -49,7 +49,23 @@ sudo journalctl -u digihealth-lamp.service -f
 (Premi CTRL+C per uscire dalla visualizzazione dei log)
 
 -----------------------------------------------------
-4. PERCORSI DEL PROGETTO
+4. CONFIGURAZIONE OPZIONALE
+-----------------------------------------------------
+Il file di configurazione principale è:
+/home/digip/digihealth-lamp/config/default.yaml
+
+Opzioni importanti:
+- `sensors.door.enabled`: abilita/disabilita il sensore porta
+- `sensors.window.enabled`: abilita/disabilita il sensore finestra
+- `sensors.people_counter.enabled`: abilita/disabilita il conteggio persone via telecamera
+- `actuators.shelly.enabled`: abilita/disabilita il controllo Shelly
+- `actuators.led_wifi.enabled`: abilita/disabilita i faretti LED WiFi circadiani
+
+Questi sensori e attuatori sono disabilitati di default nella versione ufficiale della lampada.
+Se sono disabilitati, il servizio continuerà comunque a inviare gli altri dati ambientali.
+
+-----------------------------------------------------
+5. PERCORSI DEL PROGETTO
 -----------------------------------------------------
 Cartella progetto: /home/digip/digihealth-lamp
 File di Servizio:  /etc/systemd/system/digihealth-lamp.service

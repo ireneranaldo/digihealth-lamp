@@ -8,6 +8,7 @@ class SensorConfig(BaseModel):
     light: Dict[str, Any] = Field(default_factory=dict)
     door: Dict[str, Any] = Field(default_factory=dict)
     window: Dict[str, Any] = Field(default_factory=dict)
+    people_counter: Dict[str, Any] = Field(default_factory=dict)
     microphone: Dict[str, Any] = Field(default_factory=dict)
 
 class ProcessorConfig(BaseModel):
@@ -18,6 +19,7 @@ class ProcessorConfig(BaseModel):
 class ActuatorConfig(BaseModel):
     neopixel: Dict[str, Any] = Field(default_factory=dict)
     shelly: Dict[str, Any] = Field(default_factory=dict)
+    led_wifi: Dict[str, Any] = Field(default_factory=dict)
 
 class CommunicatorConfig(BaseModel):
     telegraf: Dict[str, Any] = Field(default_factory=dict)

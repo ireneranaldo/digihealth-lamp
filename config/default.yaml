@@ -8,9 +8,19 @@ sensors:
     i2c_bus: 1
     address: 0x23
   door:
+    enabled: false
     gpio_pin: 18
+    pull_up_down: up
   window:
+    enabled: false
     gpio_pin: 17
+    pull_up_down: up
+  people_counter:
+    enabled: false
+    rtsp_url: "rtsp://admin:Artes26!@192.168.1.124/profile2/media.smp"
+    model_path: "yolov8n.pt"
+    frame_width: 640
+    frame_height: 480
   microphone:
     enabled: false  #non presente
     device_index: null  # Auto-detect
@@ -39,14 +49,31 @@ actuators:
     ip: "192.168.1.191"
     username: ""
     password: ""
+    mode: "presence"
+    person_threshold: 1
+    iaqi_threshold: 100
+  led_wifi:
+    enabled: false #non presente
+    ip: "192.168.1.192"
+    username: ""
+    password: ""
+    mode: "circadian"
+    min_lux: 10
+    max_lux: 500
 
 communicator:
   telegraf:
     enabled: true
+    url: "https://influxdb1.digisense.it"
+    token: "qgkGXvOlp_Gj0veF-ewe8FSJGGCxQQoh0EfMg-Po9Bd8Vzw2iz8Y6d-Z2DE0hqojiGgIsMWJrsbqFjV6-Mi4Zw=="
+    org: "Digiplus"
+    bucket: "health_data"
     measurement: "ZPHSensor_sensore"
     tags:
       sensor: "ZPHS01B"
       host: "raspberry01"
+      lampada: "AS00000046"
+      stanza: "UfficioDigiplus"
   ipc:
     method: "sqlite"  # or "redis"
     db_path: "/tmp/digihealth.db"

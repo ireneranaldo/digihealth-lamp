@@ -19,6 +19,27 @@ class SensorManager:
             'light': LightSensor,
         }
 
+        if getattr(config.sensors.door, 'enabled', False):
+            try:
+                from .contact import DoorSensor
+                sensor_classes['door'] = DoorSensor
+            except Exception as e:
+                logger.warning(f"Unable to load door sensor: {e}")
+
+        if getattr(config.sensors.window, 'enabled', False):
+            try:
+                from .contact import WindowSensor
+                sensor_classes['window'] = WindowSensor
+            except Exception as e:
+                logger.warning(f"Unable to load window sensor: {e}")
+
+        if getattr(config.sensors.people_counter, 'enabled', False):
+            try:
+                from .people_counter import PeopleCounterSensor
+                sensor_classes['people_counter'] = PeopleCounterSensor
+            except Exception as e:
+                logger.warning(f"Unable to load people counter sensor: {e}")
+
         for sensor_name, sensor_class in sensor_classes.items():
             sensor_config = getattr(config.sensors, sensor_name, {})
             if sensor_config.get('enabled', True):

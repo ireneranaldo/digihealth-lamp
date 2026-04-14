@@ -12,3 +12,5 @@ telegraf-pyplug
 pydantic
 pyyaml
 pytest
+ultralytics
+opencv-python-headless
