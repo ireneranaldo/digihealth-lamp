@@ -42,7 +42,7 @@ processors:
 actuators:
   neopixel:
     enabled: true  # LED collegati direttamente al Raspberry
-    pin: 18  # GPIO number (mappato a board.GP18)
+    pin: 12  # Pin fisico 12 (GPIO 18) - usa board.D12
     num_pixels: 144
     iaqi_range: [0, 79]
     circadian_range: [80, 143]

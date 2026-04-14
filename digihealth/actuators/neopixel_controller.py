@@ -12,9 +12,8 @@ class NeoPixelController:
 
     def __init__(self, config: Dict[str, Any]):
         self.config = config
-        # Su Raspberry Pi con adafruit-blinka, i pin GPIO sono chiamati GPxx
-        gpio_pin = config.get('pin', 18)  # GPIO 18 (pin fisico 12)
-        self.pin = getattr(board, f"GP{gpio_pin}")
+        # Su Raspberry Pi con adafruit-blinka, usa board.D12 per pin fisico 12 (GPIO 18)
+        self.pin = board.D12
         self.num_pixels = config.get('num_pixels', 144)
         self.iaqi_range = config.get('iaqi_range', [0, 79])
         self.circadian_range = config.get('circadian_range', [80, 143])
