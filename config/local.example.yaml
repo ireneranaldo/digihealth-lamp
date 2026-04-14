@@ -1,4 +1,4 @@
-# Configurazione per Raspberry con telecamera YOLO e LED WiFi
+# Configurazione per Raspberry con telecamera YOLO e LED NeoPixel
 # Disabilita componenti non presenti
 sensors:
   microphone:
@@ -12,10 +12,12 @@ processors:
     enabled: false
 
 actuators:
-  led_wifi:
-    enabled: true
-    ip: "192.168.1.192"  # IP corretto del LED WiFi
-    mode: "circadian"
+  neopixel:
+    enabled: true  # LED collegati direttamente al Raspberry
+  shelly:
+    enabled: true  # Shelly presente su WiFi
+    ip: "192.168.1.191"
+    mode: "presence"
 
 communicator:
   telegraf:

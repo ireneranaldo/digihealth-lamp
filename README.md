@@ -137,7 +137,8 @@ I tag InfluxDB possono essere configurati in diversi modi (priorità decrescente
 
 Usa `digihealth-setup` per abilitare:
 - **Conteggio persone**: telecamera RTSP con YOLOv8
-- **Faretti LED WiFi**: luce circardiana basata su lux
+- **NeoPixel LED**: striscia LED collegata direttamente al Raspberry (abilitata di default)
+- **Shelly relay**: controllo dispositivi WiFi
 - **Sensori porta/finestra**: GPIO contact sensors
 
 Se sul Raspberry non ci sono microfono e casse, aggiungi esplicitamente queste opzioni in `config/local.yaml`:
@@ -165,10 +166,12 @@ processors:
     enabled: false
 
 actuators:
-  led_wifi:
-    enabled: true
-    ip: "192.168.1.192"
-    mode: "circadian"
+  neopixel:
+    enabled: true  # LED collegati direttamente al Raspberry
+  shelly:
+    enabled: true  # Shelly presente su WiFi
+    ip: "192.168.1.191"
+    mode: "presence"
 
 communicator:
   telegraf:

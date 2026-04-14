@@ -39,7 +39,7 @@ processors:
 
 actuators:
   neopixel:
-    enabled: false  #non presente
+    enabled: true  # LED collegati direttamente al Raspberry
     pin: 12
     num_pixels: 144
     iaqi_range: [0, 79]
