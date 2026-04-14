@@ -21,6 +21,8 @@ sensors:
     model_path: "yolov8n.pt"
     frame_width: 640
     frame_height: 480
+    show_video: false  # Set to true to visualize video with bounding boxes
+    frame_interval: 2  # Seconds between displayed frames
   microphone:
     enabled: false  #non presente
     device_index: null  # Auto-detect

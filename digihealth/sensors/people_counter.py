@@ -13,8 +13,11 @@ class PeopleCounterSensor(BaseSensor):
         self.model_path = config.get('model_path', 'yolov8n.pt')
         self.frame_width = config.get('frame_width', 640)
         self.frame_height = config.get('frame_height', 480)
+        self.show_video = config.get('show_video', False)
+        self.frame_interval = config.get('frame_interval', 2)  # Secondi tra i frame visualizzati
         self.model = None
         self.cap = None
+        self.last_frame_time = 0
         self._load_model()
 
     def _load_model(self):
@@ -70,12 +73,49 @@ class PeopleCounterSensor(BaseSensor):
                 return {}
 
             frame = cv2.resize(frame, (self.frame_width, self.frame_height))
-            results = self.model(frame)
-            person_count = sum(
-                1
-                for box in results[0].boxes
-                if int(box.cls) == 0
-            )
+            results = self.model(frame, verbose=False)
+            
+            person_count = 0
+            person_boxes = []
+            
+            # Conta persone e raccoglie bounding boxes
+            for box in results[0].boxes:
+                if int(box.cls) == 0:  # Classe YOLO 0 = person
+                    person_count += 1
+                    person_boxes.append(box)
+            
+            # Visualizza il video se abilitato
+            if self.show_video:
+                import time
+                current_time = time.time()
+                
+                # Visualizza il frame ogni N secondi
+                if current_time - self.last_frame_time >= self.frame_interval:
+                    self.last_frame_time = current_time
+                    
+                    # Disegna i bounding boxes
+                    for box in person_boxes:
+                        x1, y1, x2, y2 = map(int, box.xyxy[0])
+                        cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
+                    
+                    # Scrivi il conteggio delle persone sul frame
+                    cv2.putText(
+                        frame,
+                        f"People: {person_count}",
+                        (10, 30),
+                        cv2.FONT_HERSHEY_SIMPLEX,
+                        1,
+                        (0, 255, 0),
+                        2
+                    )
+                    
+                    cv2.imshow("YOLOv8 People Counter", frame)
+                    
+                    # Premi 'q' per uscire dal preview
+                    if cv2.waitKey(1) & 0xFF == ord('q'):
+                        cv2.destroyAllWindows()
+                        self.show_video = False
+
             return {"person_count": int(person_count)}
         except Exception as e:
             self.logger.error(f"Error reading people counter sensor: {e}")
