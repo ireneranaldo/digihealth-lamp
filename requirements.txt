@@ -3,7 +3,7 @@ numpy==1.26.0
 PyAudio==0.2.14
 RPi.GPIO
 board
-neopixel
+adafruit-circuitpython-neopixel
 adafruit-blinka
 smbus2
 pyserial
