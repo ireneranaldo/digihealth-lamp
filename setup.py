@@ -9,6 +9,7 @@ setup(
     description="Smart Lamp with environmental monitoring and InfluxDB integration",
     author="Your Name",
     packages=find_packages(),
+    py_modules=["setup_config"],
     install_requires=requirements,
     entry_points={
         "console_scripts": [
