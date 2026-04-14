@@ -70,7 +70,9 @@ class TelegrafClient:
 
             # Invio fisico del dato
             self.write_api.write(bucket=self.bucket, org=self.org, record=point)
-            logger.debug(f"Sent {field_count} fields to InfluxDB: {list(fields.keys())}")
+            
+            sent_keys = [key for key, val in fields.items() if val is not None]
+            logger.debug(f"Sent {field_count} fields to InfluxDB: {sent_keys}")
             
         except Exception as e:
             logger.error(f"Errore durante l'invio a InfluxDB: {e}")
