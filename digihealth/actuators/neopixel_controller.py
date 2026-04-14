@@ -12,7 +12,9 @@ class NeoPixelController:
 
     def __init__(self, config: Dict[str, Any]):
         self.config = config
-        self.pin = getattr(board, f"D{config.get('pin', 12)}")
+        # Su Raspberry Pi, i pin sono GPIO numbers, non pin fisici
+        gpio_pin = config.get('pin', 18)  # GPIO 18 (pin fisico 12)
+        self.pin = getattr(board, f"D{gpio_pin}")
         self.num_pixels = config.get('num_pixels', 144)
         self.iaqi_range = config.get('iaqi_range', [0, 79])
         self.circadian_range = config.get('circadian_range', [80, 143])
