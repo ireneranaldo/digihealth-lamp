@@ -138,12 +138,6 @@ class NeoPixelController:
             lux = data.get('lux-IntensitaLuminosa', 0)
             people = self._read_person_count()
 
-            # Check time constraints
-            if not self._is_active_time():
-                self.pixels.fill((0, 0, 0))
-                self.pixels.show()
-                return
-
             # IAQI breathing effect
             color = self._get_iaqi_color(iaqi)
             self._set_iaqi_breathing(color)
@@ -160,14 +154,6 @@ class NeoPixelController:
 
         except Exception as e:
             logger.error(f"NeoPixel update failed: {e}")
-
-            # People indicator
-            self._set_people_leds(people)
-
-            self.pixels.show()
-
-        except Exception as e:
-            logger.error(f"Error updating NeoPixel: {e}")
 
     def _read_person_count(self) -> int:
         """Read person count from file."""
