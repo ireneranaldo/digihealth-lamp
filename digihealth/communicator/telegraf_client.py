@@ -27,7 +27,7 @@ class TelegrafClient:
         try:
             # Creazione del punto per InfluxDB
             # Usiamo 'ZPHSensor' come nel vecchio file
-            point = influxdb_client.Point("ZPHSensor")
+            point = influxdb_client.Point("ZPHSensor_sensore")
             
             # Mappiamo i campi esattamente come faceva il vecchio parse_sensor_data
             # Questi nomi sono quelli che Telegraf riceveva e mandava al database
