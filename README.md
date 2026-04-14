@@ -103,6 +103,8 @@ Il sistema supporta **configurazioni gerarchiche** per adattarsi a installazioni
 1. **`config/default.yaml`** - Configurazione di base (non modificare)
 2. **`config/local.yaml`** - Configurazione specifica dell'installazione (creato automaticamente)
 
+> Tutta la configurazione applicativa deve risiedere qui: nessuna impostazione hardware va hardcodata nel codice.
+
 ### 🏷️ Configurazione tag InfluxDB
 
 I tag InfluxDB possono essere configurati in diversi modi (priorità decrescente):

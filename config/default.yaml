@@ -8,15 +8,15 @@ sensors:
     i2c_bus: 1
     address: 0x23
   door:
-    enabled: false
+    enabled: true
     gpio_pin: 18
     pull_up_down: up
   window:
-    enabled: false
+    enabled: true
     gpio_pin: 17
     pull_up_down: up
   people_counter:
-    enabled: false
+    enabled: true
     rtsp_url: "rtsp://admin:Artes26!@192.168.1.124/profile2/media.smp"
     model_path: "yolov8n.pt"
     frame_width: 640
