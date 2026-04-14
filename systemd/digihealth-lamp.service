@@ -12,6 +12,7 @@ Restart=always
 RestartSec=5
 StandardOutput=journal
 StandardError=journal
+# Log file is now in user home directory, no special permissions needed
 
 [Install]
 WantedBy=multi-user.target

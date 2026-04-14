@@ -86,4 +86,4 @@ web:
 
 logging:
   level: "INFO"
-  file: "/var/log/digihealth-lamp.log"
+  file: "~/digihealth-lamp.log"
